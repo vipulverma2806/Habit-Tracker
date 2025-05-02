@@ -20,11 +20,30 @@ function App() {
       });
   }, []);
 
-  let filtered = all.filter((habit) => {
-    if (filterCat) {
-      if (filterCat && habit.category === filterCat) return true;
-    } else return true;
-  });
+  // let filtered = all.filter((habit) => {
+  //   if (filterTag && filterCat) {
+  //     if (habit.category === filterCat && habit.tags.includes(filterTag))
+  //       return true;
+  //     else return false;
+  //   }
+  //   if (filterTag || filterCat) {
+  //     if (filterCat) {
+  //       if (filterCat && habit.category === filterCat) return true;
+  //       else return false;
+  //     }
+  //     if (filterTag) {
+  //       if (habit.tags.includes(filterTag)) return true;
+  //       else return false;
+  //     }
+  //   }
+  //   else return true;
+  // });
+
+  let filtered = all.filter(
+    (habit) =>
+      (!filterTag || habit.tags.includes(filterTag)) &&
+      (!filterCat || habit.category === filterCat)
+  );
 
   const addORupdate = () => {
     console.log(hname, category, tags);
@@ -33,7 +52,10 @@ function App() {
       .post("http://localhost:4545/add", {
         hname: hname,
         category: category,
-        tags: tags,
+        tags: tags
+          .split(",")
+          .map((item) => item.trim())
+          .join(","),
       })
       .then((response) => {
         console.log(response);
@@ -90,7 +112,7 @@ function App() {
               onChange={(e) => setFilterCat(e.target.value)}
             >
               {console.log(filterCat)}
-              <option>Filter by Category</option>
+              <option value="">Filter by Category</option>
               {[...new Set(all.map((habit) => habit.category))].map(
                 (category) => {
                   return (
@@ -108,16 +130,21 @@ function App() {
               onChange={(e) => setFilterTag(e.target.value)}
             >
               {console.log(filterTag)}
-              <option>Filter by Tags</option>
-              {[...new Set(all.map((habit) => habit.category))].map(
-                (category) => {
-                  return (
-                    <option value={category} className="">
-                      {category}
-                    </option>
-                  );
-                }
-              )}
+              <option value="">Filter by Tags</option>
+              {[
+                ...new Set(
+                  all
+                    .map((habit) => habit.tags)
+                    .join(",")
+                    .split(",")
+                ),
+              ].map((tag) => {
+                return (
+                  <option value={tag} className="">
+                    {tag}
+                  </option>
+                );
+              })}
             </select>
           </div>
         </div>
