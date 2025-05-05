@@ -7,13 +7,14 @@ function App() {
   const [all, setAll] = useState([]);
   const [filterCat, setFilterCat] = useState("");
   const [filterTag, setFilterTag] = useState("");
+  const [EditId, setEditId] = useState("");
 
   useEffect(() => {
     axios
       .get("http://localhost:4545/get")
       .then((response) => {
         setAll(response.data);
-        console.log(response);
+        // console.log(response);
       })
       .catch((err) => {
         console.log(err);
@@ -45,9 +46,9 @@ function App() {
       (!filterCat || habit.category === filterCat)
   );
 
-  const addORupdate = () => {
-    console.log(hname, category, tags);
-
+  const add = () => {
+    // console.log(hname, category, tags);
+   if(hname){
     axios
       .post("http://localhost:4545/add", {
         hname: hname,
@@ -64,6 +65,7 @@ function App() {
             hname: hname,
             category: category,
             tags: tags,
+            _id: response.data,
           },
           ...all,
         ]);
@@ -71,12 +73,57 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    }
+  };
+
+  const update = () => {
+    // console.log(hname, category, tags);
+
+    axios
+      .put(`http://localhost:4545/update/`, {
+        hname: hname,
+        category: category,
+        tags: tags
+          .split(",")
+          .map((item) => item.trim())
+          .join(","),
+        id: EditId,
+      })
+      .then((response) => {
+        // console.log(response);
+
+        setAll(
+          all.map((item) => {
+            if (item._id === response.data._id) {
+              return {
+                hname: hname,
+                category: category,
+                tags: tags,
+                _id: response.data._id,
+              };
+            } else return item;
+          }),
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const habitDelete = (id) => {
+    // console.log("clicked" + id);
+    axios
+      .delete(`http://localhost:4545/delete/${id}`)
+      .then((response) => {
+        setAll(all.filter((habit) => habit._id !== id));
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <>
-      <div className="h-screen w-full bg-gradient-to-br from-blue-400 to-red-400 flex ">
-        <div className="w-1/3 flex flex-col p-5 gap-4">
+      <div className="h-full w-full bg-gradient-to-br from-blue-400 to-red-400 flex ">
+        <div className="w-1/3 flex flex-col p-5 gap-4 h-screen">
           <h1 className="text-4xl font-bold text-center text-amber-100 ">
             HABIT TRACKER
           </h1>
@@ -98,12 +145,14 @@ function App() {
             className="bg-gray-500 rounded px-2 py-3 placeholder-white"
             onChange={(e) => setTags(e.target.value)}
           ></input>
+
           <button
             className="bg-gradient-to-br from-green-400 to-yellow-200 rounded-2xl p-2 active:bg-red-600"
-            onClick={addORupdate}
+            onClick={EditId ? update : add}
           >
-            Add
+            {EditId ? "Update" : "Add"}
           </button>
+
           <div className="flex flex-row gap-4">
             <select
               name="category"
@@ -111,7 +160,7 @@ function App() {
               className="w-1/2 bg-gray-500 rounded px-2 py-3"
               onChange={(e) => setFilterCat(e.target.value)}
             >
-              {console.log(filterCat)}
+              {/* {console.log(filterCat)} */}
               <option value="">Filter by Category</option>
               {[...new Set(all.map((habit) => habit.category))].map(
                 (category) => {
@@ -129,7 +178,7 @@ function App() {
               className="w-1/2 bg-gray-500 rounded px-2 py-3"
               onChange={(e) => setFilterTag(e.target.value)}
             >
-              {console.log(filterTag)}
+              {/* {console.log(filterTag)} */}
               <option value="">Filter by Tags</option>
               {[
                 ...new Set(
@@ -154,10 +203,20 @@ function App() {
               <div className="flex flex-col bg-gray-600 rounded-2xl p-4 text-center text-white">
                 <div>{habit.hname}</div>
                 <div className="flex flex-row justify-between">
-                  <div>abc</div>
+                  <div>{}</div>
                   <div>
-                    <button className="mx-2 text-yellow-400">Edit</button>
-                    <button className="mx-2 text-red-500">Delete</button>
+                    <button
+                      className="mx-2 text-yellow-400"
+                      onClick={() => setEditId(habit._id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="mx-2 text-red-500"
+                      onClick={() => habitDelete(habit._id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
                 <div className="text-center">Category: {habit.category}</div>

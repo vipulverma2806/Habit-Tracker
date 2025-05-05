@@ -3,6 +3,7 @@ const habitModel = new mongoose.Schema({
   hname: {
     type: String,
     required: true,
+    unique:true,
   },
   category: {
     type: String,

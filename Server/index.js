@@ -19,8 +19,27 @@ app.post("/add", async (req, res) => {
   const { hname, category, tags } = req.body;
   try {
     const habit = new Habit({ hname, category, tags });
-    await habit.save();
-    res.json("ok");
+    const response = await habit.save();
+    res.json(response._id.toString());
+  } catch (err) {
+    res.json(err.message);
+  }
+});
+
+app.put("/update", async (req, res) => {
+  const { hname, category, tags, id } = req.body;
+  try {
+    const response = await Habit.findByIdAndUpdate(
+      id,
+      {
+        hname: hname,
+        category: category,
+        tags: tags,
+      },
+      { new: true }
+    );
+    console.log(response);
+    res.json(response);
   } catch (err) {
     res.json(err.message);
   }
@@ -32,6 +51,19 @@ app.get("/get", async (req, res) => {
     res.json(habit);
   } catch (err) {
     res.json(err.message);
+  }
+});
+
+app.delete("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    await Habit.findByIdAndDelete(id);
+
+    console.log("Deleted Successfully");
+    res.json("deleted");
+  } catch (err) {
+    console.log(err);
   }
 });
 
