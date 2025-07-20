@@ -10,4 +10,4 @@ The Habit Tracker App is a simple and intuitive tool designed to help you build 
 Start tracking your habits today and enhance your productivity!
 
 ### Dashboard
-![Dashboard](./Frontend/public/screenshots/Dashboard.png)
+![Dashboard](./Front/public/Dashboard.png)
