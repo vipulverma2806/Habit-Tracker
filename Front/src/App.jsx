@@ -48,31 +48,34 @@ function App() {
 
   const add = () => {
     // console.log(hname, category, tags);
-   if(hname){
-    axios
-      .post("http://localhost:4545/add", {
-        hname: hname,
-        category: category,
-        tags: tags
-          .split(",")
-          .map((item) => item.trim())
-          .join(","),
-      })
-      .then((response) => {
-        console.log(response);
-        setAll([
-          {
-            hname: hname,
-            category: category,
-            tags: tags,
-            _id: response.data,
-          },
-          ...all,
-        ]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (hname) {
+      axios
+        .post("http://localhost:4545/add", {
+          hname: hname,
+          category: category,
+          tags: tags
+            .split(",")
+            .map((item) => item.trim())
+            .join(","),
+        })
+        .then((response) => {
+          console.log(response);
+          setAll([
+            {
+              hname: hname,
+              category: category,
+              tags: tags,
+              _id: response.data,
+            },
+            ...all,
+          ]);
+          setHname("");
+          setCategory("");
+          setTags("");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -102,7 +105,7 @@ function App() {
                 _id: response.data._id,
               };
             } else return item;
-          }),
+          })
         );
       })
       .catch((err) => {
@@ -131,18 +134,21 @@ function App() {
             type="text"
             placeholder="Habit Name"
             className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            value={hname}
             onChange={(e) => setHname(e.target.value)}
           ></input>
           <input
             type="text"
             placeholder="Category"
             className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            value={category}
             onChange={(e) => setCategory(e.target.value)}
           ></input>
           <input
             type="text"
             placeholder="tags (comma-seperated)"
             className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            value={tags}
             onChange={(e) => setTags(e.target.value)}
           ></input>
 
@@ -203,7 +209,6 @@ function App() {
               <div className="flex flex-col bg-gray-600 rounded-2xl p-4 text-center text-white">
                 <div>{habit.hname}</div>
                 <div className="flex flex-row justify-between">
-                  <div>{}</div>
                   <div>
                     <button
                       className="mx-2 text-yellow-400"
@@ -211,6 +216,8 @@ function App() {
                     >
                       Edit
                     </button>
+                  </div>
+                  <div>
                     <button
                       className="mx-2 text-red-500"
                       onClick={() => habitDelete(habit._id)}
