@@ -125,7 +125,7 @@ function App() {
 
   return (
     <>
-      <div className="h-full w-full bg-gradient-to-br from-blue-400 to-red-400 flex ">
+      <div className="h-full w-full bg-gray-900 flex ">
         <div className="w-1/3 flex flex-col p-5 gap-4 h-screen">
           <h1 className="text-4xl font-bold text-center text-amber-100 ">
             HABIT TRACKER
