@@ -133,21 +133,21 @@ function App() {
           <input
             type="text"
             placeholder="Habit Name"
-            className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            className="bg-gray-500 rounded-xl px-2 py-3 placeholder-white"
             value={hname}
             onChange={(e) => setHname(e.target.value)}
           ></input>
           <input
             type="text"
             placeholder="Category"
-            className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            className="bg-gray-500 rounded-xl px-2 py-3 placeholder-white"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           ></input>
           <input
             type="text"
             placeholder="tags (comma-seperated)"
-            className="bg-gray-500 rounded px-2 py-3 placeholder-white"
+            className="bg-gray-500 rounded-xl px-2 py-3 placeholder-white"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           ></input>
@@ -163,7 +163,7 @@ function App() {
             <select
               name="category"
               id=""
-              className="w-1/2 bg-gray-500 rounded px-2 py-3"
+              className="w-1/2 bg-gray-500 text-white rounded-xl px-2 py-3"
               onChange={(e) => setFilterCat(e.target.value)}
             >
               {/* {console.log(filterCat)} */}
@@ -181,7 +181,7 @@ function App() {
             <select
               name="tags"
               id=""
-              className="w-1/2 bg-gray-500 rounded px-2 py-3"
+              className="w-1/2 bg-gray-500 rounded-xl text-white px-2 py-3"
               onChange={(e) => setFilterTag(e.target.value)}
             >
               {/* {console.log(filterTag)} */}
